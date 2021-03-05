@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--映射配置文件定义：一个映射配置文件对应一个java接口文件（由namespace指明），
+在这个接口文件定义对数据库的操作-->
+<!-- 必须对应着想要让Mybatis实现的接口的全类名-->
+<mapper namespace="com.hqyj.wine.dao.WineDao">
+    <!-- 写映射语句-->
+    <!-- id对应到所要实现的方法名上-->
+    <!-- resultType告诉mybatis将wine表的记录查询出来的记录设到wine对象里面去-->
+<!--查询所有数据-->
+<select id="queryAll" resultType="com.hqyj.wine.entity.Wine">
+    select wine_id as id ,wine_desc as wineName ,wine_price as price ,produce_addr produceAddress,
+    wine_type as wineType,bouquet_type bouquet,wine_sale wineSale from wine
+</select>
+<!--查询一些数据，模糊查询，通过产地和品牌-->
+<select id="getSome" resultType="com.hqyj.wine.entity.Wine">
+    select wine_id as id ,wine_desc as wineName ,wine_price as price ,produce_addr produceAddress,
+    wine_type as wineType,bouquet_type bouquet,wine_sale wineSale from wine where wine_desc
+    like #{queryString} or produce_addr like #{queryString}
+</select>
+<!-- 插入一个wine的sql映射语句 -->
+<insert id="insertOne" parameterType="com.hqyj.wine.entity.Wine">
+    insert into wine (wine_desc,wine_price,produce_addr,wine_type,bouquet_type ,wine_sale) values
+    (#{wineName}, #{price}, #{produceAddress}, #{wineType}, #{bouquet}, #{wineSale})
+</insert>
+<!-- 通过id查询wine信息-->
+<select id="queryOneById" resultType="com.hqyj.wine.entity.Wine">
+    select wine_id as id ,wine_desc as wineName ,wine_price as price ,produce_addr produceAddress,
+    wine_type as wineType,bouquet_type bouquet,wine_sale wineSale from wine where wine_id = #{id}
+</select>
+<!-- 更新某一个wine的数据 -->
+<update id="updateOne" parameterType="com.hqyj.wine.entity.Wine">
+    update wine set wine_desc=#{wineName},wine_price=#{price},produce_addr=#{produceAddress},
+    wine_type=#{wineType},bouquet_type=#{bouquet},wine_sale=#{wineSale} where wine_id=#{id}
+</update>
+<delete id="deleteOneById" parameterType="com.hqyj.wine.entity.Wine">
+    delete  from wine where wine_id=#{id};
+</delete>
+</mapper>

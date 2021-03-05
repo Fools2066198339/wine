@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--映射配置文件定义：一个映射配置文件对应一个java接口文件（由namespace指明），
+在这个接口文件定义对数据库的操作-->
+<!-- 必须对应着想要让Mybatis实现的接口的全类名-->
+<mapper namespace="com.hqyj.wine.dao.WineDataDao">
+    <select id="queryGroupByAddress" resultType="com.hqyj.wine.entity.EchartsData">
+        select produce_addr as name, count(wine_id) as value  from wine group by name;
+    </select>
+
+    <select id="queryTopNAddress" resultType="com.hqyj.wine.entity.EchartsData">
+        select produce_addr as name, count(wine_id) as value  from wine group by name
+        order by value desc  limit #{n};
+    </select>
+<!--    查询年龄最小的n个用户的数据（名字、年龄）-->
+    <select id="queryTopNPrice" resultType="com.hqyj.wine.entity.EchartsData">
+        select wine_brand as name,wine_price as value from wine  ORDER BY  value desc limit #{n};
+    </select>
+<!--查询最高价格-->
+    <select id="queryMaxPrice" resultType="com.hqyj.wine.entity.EchartsData">
+        select wine_brand as name,max(wine_price) as value  from wine;
+    </select>
+    <!--查询最低价格-->
+    <select id="queryMinPrice" resultType="com.hqyj.wine.entity.EchartsData">
+        select wine_brand as  name,min(wine_price) as value  from wine;
+    </select>
+    <!--查询销量-->
+    <select id="queryTopNSale" resultType="com.hqyj.wine.entity.EchartsData">
+    SELECT wine_brand as name ,wine_sale as value from wine ORDER BY value desc limit #{n};
+    </select>
+</mapper>

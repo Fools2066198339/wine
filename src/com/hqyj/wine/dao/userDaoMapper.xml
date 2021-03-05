@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--映射配置文件定义：一个映射配置文件对应一个java接口文件（由namespace指明），
+在这个接口文件定义对数据库的操作-->
+<!-- 必须对应着想要让Mybatis实现的接口的全类名-->
+<mapper namespace="com.hqyj.wine.dao.UserDao">
+    <!-- 写映射语句-->
+    <!-- id对应到所要实现的方法名上-->
+    <!-- resultType告诉mybatis将user表的记录查询出来的记录设到User对象里面去-->
+    <select id="queryAll" resultType="com.hqyj.wine.entity.User">
+        <!-- 标签体里面写sql语句-->
+        select id,name,username,password,address,phone,email,is_valid as isValid,createtime from user
+    </select>
+    <!-- 实现通过用户账号密码进行查询的映射语句-->
+    <select id="queryByUsernameAndPassword" resultType="com.hqyj.wine.entity.User">
+        select id,name,username,password,address,phone,email,is_valid as isValid,createtime from user
+        where username = #{username} and password = #{password}
+    </select>
+    <!-- 模糊查询，根据用户的昵称或手机号-->
+    <select id="querySome" resultType="com.hqyj.wine.entity.User">
+        select id,name,username,password,address,phone,email,is_valid as isValid,createtime from user
+        where name like #{queryString} or phone like #{queryString}
+    </select>
+    <!-- 实现删除一个user的sql操作 -->
+    <delete id="deleteOneById">
+        delete from user where id= #{id}
+    </delete>
+    <!-- 实现删除一个user的sql操作 -->
+    <delete id="deleteAllById">
+        delete from user
+    </delete>
+
+    <!-- 插入一个user的sql映射语句 -->
+    <insert id="insertOne" parameterType="com.hqyj.wine.entity.User">
+        insert into user (name, username, password, address, phone, email) values
+        (#{name}, #{username}, #{password}, #{address}, #{phone}, #{email})
+    </insert>
+
+    <!-- 通过id查询user信息-->
+    <select id="queryOneById" resultType="com.hqyj.wine.entity.User">
+        select id,name,username,password,address,phone,email,is_valid as isValid,createtime from user
+        where id = #{id}
+    </select>
+
+    <!-- 通过username查询user信息-->
+    <select id="queryOneByName" resultType="com.hqyj.wine.entity.User">
+        select id,name,username,password,address,phone,email,is_valid as isValid,createtime from user
+        where username = #{queryString}
+    </select>
+    <!-- 更新某一个用户的数据 -->
+    <update id="updateOne" parameterType="com.hqyj.wine.entity.User">
+        update user set name=#{name},password=#{password},email=#{email},
+        phone=#{phone},address=#{address} where id=#{id}
+    </update>
+    <!-- 更新某一个用户的密码-->
+    <update id="updatePwdById" parameterType="com.hqyj.wine.entity.User">
+        update user set password=#{password} where id=#{id}
+    </update>
+    <delete id="deleteSomeById" parameterType="com.hqyj.wine.entity.User">
+        <if test="po.ids != null and po.ids != ''">
+        DELETE FROM user where id in
+        <foreach collection="po.ids" open="(" close=")" item="item" separator=",">
+        #{ids}
+    </foreach>;
+    </if>
+    </delete>
+</mapper>
